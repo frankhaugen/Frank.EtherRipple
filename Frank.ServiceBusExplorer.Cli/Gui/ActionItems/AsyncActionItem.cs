@@ -1,4 +1,4 @@
-namespace Frank.ServiceBusExplorer.Cli.Gui;
+namespace Frank.ServiceBusExplorer.Cli.Gui.ActionItems;
 
 public class AsyncActionItem
 {

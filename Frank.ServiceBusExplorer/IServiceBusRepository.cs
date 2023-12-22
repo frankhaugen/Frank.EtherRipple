@@ -1,5 +1,7 @@
 using Azure.Messaging.ServiceBus;
 
+using Frank.ServiceBusExplorer.Models;
+
 namespace Frank.ServiceBusExplorer;
 
 public interface IServiceBusRepository

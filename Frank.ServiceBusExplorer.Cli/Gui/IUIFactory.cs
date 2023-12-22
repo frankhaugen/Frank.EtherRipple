@@ -1,18 +1,15 @@
+using Frank.ServiceBusExplorer.Cli.Gui.Menues;
+using Frank.ServiceBusExplorer.Cli.Gui.Pages;
+
 namespace Frank.ServiceBusExplorer.Cli.Gui;
 
 public interface IUIFactory
 {
     IAlert CreateAlert();
     
-    IUserInput<string> CreateStringInput(string prompt);
-    
     IMenu<T> CreateMenu<T>(string? prompt, IEnumerable<T> items, Func<T, string> converter, Action<T> onSelect) where T : notnull;
     
-    IAsyncMenu<T> CreateAsyncMenu<T>(string? prompt, IEnumerable<T> items, Func<T, string> converter, Func<T, Task> onSelectAsync);
+    IAsyncMenu<T> CreateAsyncMenu<T>(string? prompt, IEnumerable<T> items, Func<T, string> converter, Func<T, Task> onSelectAsync) where T : notnull;
     
-    ActionItemMenu CreateActionMenu(string? prompt, IEnumerable<ActionItem> items, Action<ActionItem> onSelect);
-    
-    ITable CreateTable<T>(IEnumerable<T> items, Func<T, string[]> converter);
-    
-    IPage CreateJsonPage(string jsonDocument);
+    IPage CreateTextPage(string heading, string body);
 }

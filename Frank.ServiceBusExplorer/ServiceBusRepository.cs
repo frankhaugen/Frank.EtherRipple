@@ -1,13 +1,15 @@
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
 
+using Frank.ServiceBusExplorer.Models;
+
 namespace Frank.ServiceBusExplorer;
 
 public class ServiceBusRepository : IServiceBusRepository
 {
     private readonly Dictionary<string, ServiceBusEntityFactory> _serviceBusEntityFactories = new();
 
-    public ServiceBusRepository(IServiceBusConfigurationService serviceBusConfigurationService)
+    public ServiceBusRepository(IServiceBusConfiguration serviceBusConfigurationService)
     {
         var serviceBusConfigurationItems = serviceBusConfigurationService.GetServiceBusConfigurationItems();
         

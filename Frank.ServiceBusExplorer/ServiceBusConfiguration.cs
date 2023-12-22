@@ -1,12 +1,14 @@
 ﻿using System.Text.Json;
 
+using Frank.ServiceBusExplorer.Models;
+
 namespace Frank.ServiceBusExplorer;
 
-public class ServiceBusConfigurationService : IServiceBusConfigurationService
+public class ServiceBusConfiguration : IServiceBusConfiguration
 {
     private readonly IEnumerable<ServiceBusConfigurationItem> _serviceBusConfigurationItems;
 
-    public ServiceBusConfigurationService(FileSystemInfo configurationFile)
+    public ServiceBusConfiguration(FileSystemInfo configurationFile)
     {
         if (!configurationFile.Exists)
             throw new FileNotFoundException("The specified configuration file does not exist.", configurationFile.FullName);
@@ -15,8 +17,5 @@ public class ServiceBusConfigurationService : IServiceBusConfigurationService
         _serviceBusConfigurationItems = serviceBusConfigurationItems ?? throw new Exception("The specified configuration file does not contain any service bus configuration items.");
     }
 
-    public ServiceBusConfigurationService(IEnumerable<ServiceBusConfigurationItem> serviceBusConfigurationItems) => _serviceBusConfigurationItems = serviceBusConfigurationItems;
-    
     public IEnumerable<ServiceBusConfigurationItem> GetServiceBusConfigurationItems() => _serviceBusConfigurationItems;
-    public ServiceBusConfigurationItem? GetServiceBusConfigurationItem(string name) => _serviceBusConfigurationItems.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 }

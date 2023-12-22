@@ -2,7 +2,7 @@ using Spectre.Console;
 
 namespace Frank.ServiceBusExplorer.Cli.Gui;
 
-public class SpectreAlert : IAlert
+public class Alert : IAlert
 {
     public void ShowMessage(string message)
     {

@@ -3,6 +3,8 @@
 using Azure.Messaging.ServiceBus;
 
 using Frank.ServiceBusExplorer.Cli.Gui;
+using Frank.ServiceBusExplorer.Cli.Gui.ActionItems;
+using Frank.ServiceBusExplorer.Models;
 
 namespace Frank.ServiceBusExplorer.Cli;
 
@@ -66,7 +68,7 @@ public class ServiceBusMenuService : IServiceBusMenuService
 
     private Task ShowMessageAsync(ServiceBusReceivedMessage message)
     {
-        var jsonPage = _uiFactory.CreateJsonPage(message.Body.ToString());
+        var jsonPage = _uiFactory.CreateTextPage("Message body", message.Body.ToString());
         jsonPage.Display();
         
         return Task.CompletedTask;
@@ -83,8 +85,6 @@ public class ServiceBusMenuService : IServiceBusMenuService
         stringBuilder.Append($"EnqueuedTime: {arg.EnqueuedTime}");
         stringBuilder.Append(" | ");
         stringBuilder.Append($"ExpiresAt: {arg.ExpiresAt}");
-        stringBuilder.Append(" | ");
-        stringBuilder.Append($"ContentType: {arg.ContentType}");
         stringBuilder.Append(" | ");
         stringBuilder.Append($"CorrelationId: {arg.CorrelationId}");
         stringBuilder.Append(" | ");

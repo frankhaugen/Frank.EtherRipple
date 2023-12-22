@@ -1,4 +1,4 @@
-namespace Frank.ServiceBusExplorer;
+namespace Frank.ServiceBusExplorer.Models;
 
 public class ServiceBusConfigurationItem
 {

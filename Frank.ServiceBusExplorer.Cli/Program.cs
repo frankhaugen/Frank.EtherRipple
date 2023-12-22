@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 
 var builder = Host.CreateEmptyApplicationBuilder(new HostApplicationBuilderSettings());
 
-builder.Services.AddSingleton<IServiceBusConfigurationService>(new ServiceBusConfigurationService(new FileInfo(Path.Combine(AppContext.BaseDirectory, "ServiceBusConfigurationItems.json"))));
+builder.Services.AddSingleton<IServiceBusConfiguration>(new ServiceBusConfiguration(new FileInfo(Path.Combine(AppContext.BaseDirectory, "ServiceBusConfigurationItems.json"))));
 builder.Services.AddSingleton<IUIFactory, UiFactory>();
 builder.Services.AddSingleton<IServiceBusMenuService, ServiceBusMenuService>();
 builder.Services.AddSingleton<IServiceBusRepository, ServiceBusRepository>();
