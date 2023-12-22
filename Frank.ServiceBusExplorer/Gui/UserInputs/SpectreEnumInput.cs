@@ -1,6 +1,6 @@
 using Spectre.Console;
 
-namespace Frank.ServiceBusExplorer.Gui;
+namespace Frank.ServiceBusExplorer.Gui.UserInputs;
 
 public class SpectreEnumInput<T> : IUserInput<T> where T : struct, Enum
 {

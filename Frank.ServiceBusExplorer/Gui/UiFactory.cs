@@ -1,4 +1,6 @@
-﻿namespace Frank.ServiceBusExplorer.Gui;
+﻿using Frank.ServiceBusExplorer.Gui.UserInputs;
+
+namespace Frank.ServiceBusExplorer.Gui;
 
 public class UiFactory : IUIFactory
 {

@@ -1,3 +1,5 @@
+namespace Frank.ServiceBusExplorer.Gui;
+
 public class ActionItem
 {
     public required string Name { get; init; }

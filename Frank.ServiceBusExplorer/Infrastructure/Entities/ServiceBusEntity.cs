@@ -1,4 +1,4 @@
-namespace Frank.ServiceBusExplorer.Infrastructure;
+namespace Frank.ServiceBusExplorer.Infrastructure.Entities;
 
 public class ServiceBusEntity
 {

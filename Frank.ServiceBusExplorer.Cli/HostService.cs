@@ -1,5 +1,6 @@
 using Frank.ServiceBusExplorer;
 using Frank.ServiceBusExplorer.Gui;
+using Frank.ServiceBusExplorer.Infrastructure.Configuration;
 
 using Microsoft.Extensions.Hosting;
 
