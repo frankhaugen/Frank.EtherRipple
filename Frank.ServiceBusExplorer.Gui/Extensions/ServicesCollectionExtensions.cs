@@ -1,9 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
-using Microsoft.Extensions.Hosting;
-
-namespace PureWpfApp.Extensions;
+namespace Frank.ServiceBusExplorer.Gui.Extensions;
 
 internal static class ServicesCollectionExtensions
 {

@@ -1,13 +1,9 @@
-using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Frank.ServiceBusExplorer.Gui.Extensions;
 
-using PureWpfApp.Extensions;
-
-namespace PureWpfApp;
+namespace Frank.ServiceBusExplorer.Gui;
 
 internal class Program
 {

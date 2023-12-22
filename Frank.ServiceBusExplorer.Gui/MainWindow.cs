@@ -1,24 +1,21 @@
 ﻿using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
 
-using Microsoft.Extensions.Logging;
+using Frank.ServiceBusExplorer.Gui.UserControls;
 
-namespace PureWpfApp;
+namespace Frank.ServiceBusExplorer.Gui;
 
 internal class MainWindow : Window
 {
     private readonly ILogger<MainWindow> _logger;
-    private readonly MyTextBox _textBox;
 
-    public MainWindow(ILogger<MainWindow> logger)
+    public MainWindow(ILogger<MainWindow> logger, ServiceBusTreeView serviceBusTreeView)
     {
         _logger = logger;
-        _textBox = new MyTextBox("Write something", (o, args) => MessageBox.Show((o as TextBox)?.Text ?? ""));
 
         ConfigureWindow();
 
-        Content = _textBox;
+        Content = serviceBusTreeView;
     }
 
     private void ConfigureWindow()

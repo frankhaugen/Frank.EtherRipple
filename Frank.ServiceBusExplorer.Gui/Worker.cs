@@ -1,11 +1,4 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-
-namespace PureWpfApp;
+namespace Frank.ServiceBusExplorer.Gui;
 
 public class Worker : BackgroundService
 {

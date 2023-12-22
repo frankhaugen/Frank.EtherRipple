@@ -1,7 +1,6 @@
-using System;
 using System.Windows.Controls;
 
-namespace PureWpfApp;
+namespace Frank.ServiceBusExplorer.Gui;
 
 public class MyTextBox : GroupBox
 {
