@@ -11,5 +11,5 @@ public interface IUIFactory
     
     IAsyncMenu<T> CreateAsyncMenu<T>(string? prompt, IEnumerable<T> items, Func<T, string> converter, Func<T, Task> onSelectAsync) where T : notnull;
     
-    IPage CreateTextPage(string heading, string body);
+    IElement CreateTextPage(string heading, string body);
 }

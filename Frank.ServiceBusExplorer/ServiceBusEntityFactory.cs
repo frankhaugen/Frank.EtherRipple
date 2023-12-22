@@ -2,6 +2,8 @@ using Azure;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
 
+using Frank.ServiceBusExplorer.Models;
+
 namespace Frank.ServiceBusExplorer;
 
 public class ServiceBusEntityFactory
@@ -14,9 +16,15 @@ public class ServiceBusEntityFactory
         Name = name;
         _client = client;
         _administrationClient = administrationClient;
+
+        var queueCount = _administrationClient.GetQueuesRuntimePropertiesAsync(CancellationToken.None).ToBlockingEnumerable().Count();
+        var topicCount = _administrationClient.GetTopicsRuntimePropertiesAsync(CancellationToken.None).ToBlockingEnumerable().Count();
+        Entity = new ServiceBusEntity { Name = name, TopicCount = topicCount, QueueCount = queueCount };
     }
 
     public string Name { get; }
+    
+    public ServiceBusEntity Entity { get; }
     
     public AsyncPageable<TopicRuntimeProperties> GetTopicsAsync(CancellationToken cancellationToken) 
         => _administrationClient.GetTopicsRuntimePropertiesAsync(cancellationToken);

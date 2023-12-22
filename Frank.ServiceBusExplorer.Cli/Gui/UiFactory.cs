@@ -13,5 +13,5 @@ public class UiFactory : IUIFactory
     public IAsyncMenu<T> CreateAsyncMenu<T>(string? prompt, IEnumerable<T> items, Func<T, string> converter, Func<T, Task> onSelectAsync) where T : notnull
         => new AsyncMenu<T>(prompt, items, converter, onSelectAsync);
 
-    public IPage CreateTextPage(string heading, string body) => new TextPage(heading, body);
+    public IElement CreateTextPage(string heading, string body) => new TextElement(heading, body);
 }

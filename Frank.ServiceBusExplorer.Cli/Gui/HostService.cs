@@ -56,9 +56,9 @@ public class HostService(IHostApplicationLifetime hostApplicationLifetime, IUIFa
 
         var actions = new[]
         {
-            new AsyncActionItem() { Name = "Display Service Bus Configuration", Action = DisplayAsync },
-            new AsyncActionItem() { Name = "Display Service Bus Tree", Action = DisplayServiceBusTreeAsync },
-            new AsyncActionItem { Name = "Exit", Action = async () => hostApplicationLifetime.StopApplication() }
+            new AsyncActionItem("Display Service Bus Configuration", DisplayAsync),
+            new AsyncActionItem("Display Service Bus Tree", DisplayServiceBusTreeAsync),
+            new AsyncActionItem("Exit", async () => hostApplicationLifetime.StopApplication())
         };
 
         var menu = uiFactory.CreateAsyncMenu("Select an action", actions, item => item.Name, selectedItem => selectedItem.Action());
@@ -117,9 +117,9 @@ public class HostService(IHostApplicationLifetime hostApplicationLifetime, IUIFa
     {
         var actions = new[]
         {
-            new AsyncActionItem() { Name = $"Show Messages {subscription.ActiveMessageCount}", Action = () => ShowMessagesMenuAsync(serviceBusName, topicName, subscription.Name) },
-            new AsyncActionItem { Name = $"Show Dead Letter Messages {subscription.DeadLetterMessageCount}", Action = () => ShowDeadLetterMessagesMenuAsync(serviceBusName, topicName, subscription.Name) },
-            new AsyncActionItem { Name = "Back", Action = () => Task.CompletedTask }
+            new AsyncActionItem($"Show Messages {subscription.ActiveMessageCount}", () => ShowMessagesMenuAsync(serviceBusName, topicName, subscription.Name)),
+            new AsyncActionItem($"Show Dead Letter Messages {subscription.DeadLetterMessageCount}", () => ShowDeadLetterMessagesMenuAsync(serviceBusName, topicName, subscription.Name)),
+            new AsyncActionItem("Back", () => Task.CompletedTask)
         };
         var messageMenu = uiFactory.CreateAsyncMenu("Select an option", actions, action => action.Name, message => message.Action());
         return messageMenu.DisplayAsync();

@@ -18,11 +18,12 @@ public class ServiceBusRepository : IServiceBusRepository
             var client = new ServiceBusClient(serviceBusConfigurationItem.ConnectionString);
             var administrationClient = new ServiceBusAdministrationClient(serviceBusConfigurationItem.ConnectionString);
             var serviceBusEntityFactory = new ServiceBusEntityFactory(serviceBusConfigurationItem.Name, client, administrationClient);
+            
             _serviceBusEntityFactories.Add(serviceBusConfigurationItem.Name, serviceBusEntityFactory);
         }
     }
 
-    public IEnumerable<ServiceBusEntity> GetServiceBuses() => _serviceBusEntityFactories.Keys.Select(x => new ServiceBusEntity { Name = x });
+    public IEnumerable<ServiceBusEntity> GetServiceBuses() => _serviceBusEntityFactories.Select(x => x.Value.Entity);
 
     public async Task<IEnumerable<TopicEntity>> GetTopicsAsync(string serviceBusName, CancellationToken cancellationToken)
     {
@@ -30,7 +31,7 @@ public class ServiceBusRepository : IServiceBusRepository
         var client = _serviceBusEntityFactories[serviceBusName];
         await foreach (var topic in client.GetTopicsAsync(cancellationToken))
         {
-            topics.Add(new TopicEntity { Name = topic.Name, SubscriptionCount = topic.SubscriptionCount});
+            topics.Add(new TopicEntity { Name = topic.Name, SubscriptionCount = topic.SubscriptionCount, SizeInBytes = topic.SizeInBytes});
         }
         return topics;
     }

@@ -12,9 +12,17 @@ public class AsyncMenu<T>(string? prompt, IEnumerable<T> items, Func<T, string> 
         .UseConverter(converter)
         .Title(prompt ?? "Please choose an option...");
 
+    public Task<SelectionPrompt<T>> GetPromptAsync() => Task.FromResult(_prompt);
+
     public Task DisplayAsync()
     {
         var result = AnsiConsole.Prompt(_prompt);
         return onSelect(result);
+    }
+
+    public Task DisplayAsync(Func<T, Task> onSelect2)
+    {
+        var result = AnsiConsole.Prompt(_prompt);
+        return onSelect2(result);
     }
 }

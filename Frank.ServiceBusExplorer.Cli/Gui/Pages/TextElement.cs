@@ -2,7 +2,7 @@ using Spectre.Console;
 
 namespace Frank.ServiceBusExplorer.Cli.Gui.Pages;
 
-public class TextPage(string header, string body) : IPage
+public class TextElement(string header, string body) : IElement
 {
     private readonly Panel _panel = new Panel(body)
         .Header(header)

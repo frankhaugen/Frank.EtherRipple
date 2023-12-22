@@ -1,6 +1,6 @@
 namespace Frank.ServiceBusExplorer.Cli.Gui.Pages;
 
-public interface IPage
+public interface IElement
 {
     void Display();
 }
