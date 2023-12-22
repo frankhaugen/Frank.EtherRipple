@@ -2,7 +2,6 @@
 
 using Frank.ServiceBusExplorer;
 using Frank.ServiceBusExplorer.Cli;
-using Frank.ServiceBusExplorer.Cli.Gui;
 using Frank.ServiceBusExplorer.Cli.GuiFrameworkWip;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -12,23 +11,17 @@ var builder = Host.CreateEmptyApplicationBuilder(new HostApplicationBuilderSetti
 
 // ServiceBus
 builder.Services.AddSingleton<IServiceBusConfiguration>(new ServiceBusConfiguration(new FileInfo(Path.Combine(AppContext.BaseDirectory, "ServiceBusConfigurationItems.json"))));
-builder.Services.AddSingleton<IUIFactory, UiFactory>();
 builder.Services.AddSingleton<IServiceBusRepository, ServiceBusRepository>();
-builder.Services.AddSingleton<IConsoleNavigationService, ConsoleNavigationService>();
-builder.Services.AddSingleton<HostService>();
 
-// Framework
+// UI
 builder.Services.AddSingleton<ConsoleWindow>();
 builder.Services.AddTransient<IPage, ServiceBusPage>();
-builder.Services.AddTransient<IPage, SomeOtherPage>();
+builder.Services.AddTransient<IPage, TopicsPage>();
 builder.Services.AddSingleton<IPage, RootPage>();
+builder.Services.AddSingleton<INavigator, Navigator>();
 
 var app = builder.Build();
 
 // Framework
-var consoleWindow = app.Services.GetRequiredService<ConsoleWindow>();
-consoleWindow.Show();
-
-// ServiceBus
-// var hostService = app.Services.GetRequiredService<HostService>();
-// await hostService.StartAsync();
+var navigator = app.Services.GetRequiredService<INavigator>();
+await navigator.NavigateToAsync(PageIds.RootPageId);

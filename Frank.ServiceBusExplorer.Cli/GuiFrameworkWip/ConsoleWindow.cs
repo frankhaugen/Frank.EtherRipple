@@ -1,4 +1,4 @@
-﻿using Frank.ServiceBusExplorer.Cli.Gui.ActionItems;
+﻿using Frank.ServiceBusExplorer.Cli.GuiFrameworkWip.ActionItems;
 
 using Spectre.Console;
 
@@ -14,20 +14,29 @@ public class ConsoleWindow
     {
         this.pages = pages;
     }
+    public Func<IPage, Task> OnPageChangeRequest;
 
+    public async Task DisplayPageAsync(IPage page)
+    {
+        RenderLayout();
+        var content = await page.GetViewAsync();
+        AnsiConsole.Write(content);
+        
+    }
+    
     public void Show()
     {
         NavigateTo(PageIds.RootPageId);
         while (true)
         {
-            DisplayCurrentPage();
+            DisplayCurrentPage().GetAwaiter().GetResult();
         }
     }
     
-    public void DisplayCurrentPage()
+    public async Task DisplayCurrentPage()
     {
         RenderLayout();
-        var content = currentPage.GetView();
+        var content = await currentPage.GetViewAsync();
         AnsiConsole.Write(content);
 
         var prompt = currentPage.GetOptions();

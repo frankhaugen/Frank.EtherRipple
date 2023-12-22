@@ -1,4 +1,4 @@
-﻿using Frank.ServiceBusExplorer.Cli.Gui.ActionItems;
+﻿using Frank.ServiceBusExplorer.Cli.GuiFrameworkWip.ActionItems;
 
 using Microsoft.Extensions.Hosting;
 
@@ -14,7 +14,7 @@ public class RootPage(IServiceBusRepository serviceBusRepository, IHostApplicati
     
     private object? _data;
 
-    public IRenderable GetView()
+    public async Task<IRenderable> GetViewAsync()
     {
         var tree = new Tree("Service Buses Overview")
             .Style(Style.Parse("green"))

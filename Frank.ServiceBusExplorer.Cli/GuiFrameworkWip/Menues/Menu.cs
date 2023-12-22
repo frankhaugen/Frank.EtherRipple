@@ -1,7 +1,6 @@
 using Spectre.Console;
-using Spectre.Console.Rendering;
 
-namespace Frank.ServiceBusExplorer.Cli.Gui.Menues;
+namespace Frank.ServiceBusExplorer.Cli.GuiFrameworkWip.Menues;
 
 public class Menu<T>(string? prompt, IEnumerable<T> items, Func<T, string> converter, Action<T> onSelect)
     : IMenu<T>

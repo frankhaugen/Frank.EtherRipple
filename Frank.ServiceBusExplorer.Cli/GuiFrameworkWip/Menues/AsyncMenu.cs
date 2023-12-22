@@ -1,6 +1,6 @@
 using Spectre.Console;
 
-namespace Frank.ServiceBusExplorer.Cli.Gui.Menues;
+namespace Frank.ServiceBusExplorer.Cli.GuiFrameworkWip.Menues;
 
 public class AsyncMenu<T>(string? prompt, IEnumerable<T> items, Func<T, string> converter, Func<T, Task> onSelect)
     : IAsyncMenu<T>

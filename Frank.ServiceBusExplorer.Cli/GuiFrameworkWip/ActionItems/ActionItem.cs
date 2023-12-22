@@ -1,4 +1,4 @@
-namespace Frank.ServiceBusExplorer.Cli.Gui.ActionItems;
+namespace Frank.ServiceBusExplorer.Cli.GuiFrameworkWip.ActionItems;
 
 public class ActionItem
 {

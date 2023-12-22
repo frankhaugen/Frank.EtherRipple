@@ -1,8 +1,8 @@
-﻿using Frank.ServiceBusExplorer.Cli.Gui.ActionItems;
+﻿using Frank.ServiceBusExplorer.Cli.GuiFrameworkWip.ActionItems;
 
 using Spectre.Console;
 
-namespace Frank.ServiceBusExplorer.Cli.Gui.Menues;
+namespace Frank.ServiceBusExplorer.Cli.GuiFrameworkWip.Menues;
 
 public class ActionItemMenu : IMenu<ActionItem>
 {

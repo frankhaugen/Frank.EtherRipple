@@ -1,4 +1,4 @@
-namespace Frank.ServiceBusExplorer.Cli;
+namespace Frank.ServiceBusExplorer.Cli.GuiFrameworkWip;
 
 public static class PageIds
 {

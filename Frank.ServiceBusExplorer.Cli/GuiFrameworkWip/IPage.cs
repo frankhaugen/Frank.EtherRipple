@@ -1,4 +1,4 @@
-using Frank.ServiceBusExplorer.Cli.Gui.ActionItems;
+using Frank.ServiceBusExplorer.Cli.GuiFrameworkWip.ActionItems;
 
 using Spectre.Console;
 using Spectre.Console.Rendering;
@@ -9,7 +9,7 @@ public interface IPage
 {
     Guid Id { get; }
     string Title { get; }
-    IRenderable GetView();
+    Task<IRenderable> GetViewAsync();
     SelectionPrompt<ActionItem> GetOptions();
     void SetData(object data); // Optional: For passing data to the page
 }
