@@ -1,4 +1,5 @@
 using Frank.ServiceBusExplorer.Cli.GuiFrameworkWip.ActionItems;
+using Frank.ServiceBusExplorer.Cli.GuiFrameworkWip.Menues;
 using Frank.ServiceBusExplorer.Models;
 
 using Microsoft.Extensions.Hosting;
@@ -8,20 +9,31 @@ using Spectre.Console.Rendering;
 
 namespace Frank.ServiceBusExplorer.Cli.GuiFrameworkWip;
 
-public class TopicsPage(IServiceBusRepository serviceBusRepository, IHostApplicationLifetime hostApplicationLifetime) : IPage
+public class TopicsPage(IServiceBusRepository serviceBusRepository, IHostApplicationLifetime hostApplicationLifetime, INavigator navigator) : IPage
 {
     public Guid Id { get; } = PageIds.TopicsPageId;
     public string Title => PageNames.TopicsPageName;
     
     private ServiceBusEntity? _data;
-
+    
+    private IAsyncMenu<AsyncActionItem> _menu = null;
+    
     public async Task<IRenderable> GetViewAsync()
     {
         var topics = serviceBusRepository.GetTopicsAsync(_data!.Name, hostApplicationLifetime.ApplicationStopping).GetAwaiter().GetResult();
+        IEnumerable<TopicEntity> topicEntities = topics.ToList();
         
-        // var topicMenu = MenuFactory.CreateMenu("Select a Topic", topics, topic => topic.Name, topic => ShowSubscriptionsMenuAsync(serviceBus.Name, topic));
-        
-        // return topicMenu;
+        var actions = new List<AsyncActionItem>()
+        {
+            new("Refresh", async () => await navigator.NavigateToAsync(PageIds.TopicsPageId, _data)),
+            new("Back", async () => await navigator.GoBackAsync())
+        };
+        actions.AddRange(topicEntities.Select(topicEntity => new AsyncActionItem($"{topicEntity.Name} (Topics: {topicEntity.TopicCount}, Queues: {topicEntity.QueueCount}, Size: {topicEntity.SizeInBytes:N}B)", () => navigator.NavigateToAsync(PageIds.SubscriptionsPageId, topicEntity.Name))));
+
+        _menu = MenuFactory.CreateAsyncMenu("Select a Topic", actions, async topic => await navigator.NavigateToAsync(PageIds.SubscriptionsPageId, topic.Name));
+
+        var prompt = await _menu.GetPromptAsync();
+        await navigator.UpdateMenuOptionsAsync(prompt);
         
         var table = new Table()
             .Border(TableBorder.Rounded)
@@ -32,7 +44,7 @@ public class TopicsPage(IServiceBusRepository serviceBusRepository, IHostApplica
             .AddColumn("Subscriptions")
             .AddColumn("Size");
 
-        foreach (var topic in topics)
+        foreach (var topic in topicEntities)
         {
             table.AddRow(topic.Name, topic.SubscriptionCount.ToString(), topic.SizeInBytes.ToString());
         }

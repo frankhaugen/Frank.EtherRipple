@@ -1,4 +1,9 @@
-﻿namespace Frank.ServiceBusExplorer.Cli.GuiFrameworkWip;
+﻿using Frank.ServiceBusExplorer.Cli.GuiFrameworkWip.ActionItems;
+using Frank.ServiceBusExplorer.Models;
+
+using Spectre.Console;
+
+namespace Frank.ServiceBusExplorer.Cli.GuiFrameworkWip;
 
 public class Navigator : INavigator
 {
@@ -10,6 +15,16 @@ public class Navigator : INavigator
     {
         this.consoleWindow = consoleWindow;
         this.pages = pages;
+        
+        consoleWindow.OnPageChangeRequest = DisplayPageAsync;
+        MenuUpdated += this.consoleWindow.OnMenuUpdateRequestedAsync;
+    }
+
+    public event Func<SelectionPrompt<AsyncActionItem>, Task> MenuUpdated;
+    
+    public async Task UpdateMenuOptionsAsync(SelectionPrompt<AsyncActionItem> selectionPrompt)
+    {
+        await MenuUpdated.Invoke(selectionPrompt);
     }
 
     public async Task NavigateToAsync(Guid pageId)
@@ -17,6 +32,17 @@ public class Navigator : INavigator
         var page = pages.FirstOrDefault(p => p.Id == pageId);
         if (page != null)
         {
+            pageHistory.Push(pageId);
+            await consoleWindow.DisplayPageAsync(page);
+        }
+    }
+
+    public async Task NavigateToAsync(Guid pageId, object data)
+    {
+        var page = pages.FirstOrDefault(p => p.Id == pageId);
+        if (page != null)
+        {
+            page.SetData(data);
             pageHistory.Push(pageId);
             await consoleWindow.DisplayPageAsync(page);
         }
@@ -36,5 +62,11 @@ public class Navigator : INavigator
     {
         var currentPageId = pageHistory.Peek();
         return pages.FirstOrDefault(p => p.Id == currentPageId);
+    }
+    
+    private async Task DisplayPageAsync(IPage page)
+    {
+        var view= await page.GetViewAsync();
+        AnsiConsole.Write(view);
     }
 }

@@ -7,55 +7,45 @@ namespace Frank.ServiceBusExplorer.Cli.GuiFrameworkWip;
 public class ConsoleWindow
 {
     private readonly IEnumerable<IPage> pages;
-    private IPage currentPage;
     private readonly List<Breadcrumb> _breadcrumbs = [];
 
     public ConsoleWindow(IEnumerable<IPage> pages)
     {
         this.pages = pages;
     }
-    public Func<IPage, Task> OnPageChangeRequest;
 
+    public async Task OnMenuUpdateRequestedAsync(SelectionPrompt<AsyncActionItem> selectionPrompts)
+    {
+        await RefreshMenuAsync(selectionPrompts);
+    }
+
+    public Func<IPage, Task> OnPageChangeRequest;
+    
     public async Task DisplayPageAsync(IPage page)
     {
         RenderLayout();
         var content = await page.GetViewAsync();
         AnsiConsole.Write(content);
-        
+        // await RefreshMenuAsync();
     }
-    
-    public void Show()
-    {
-        NavigateTo(PageIds.RootPageId);
-        while (true)
-        {
-            DisplayCurrentPage().GetAwaiter().GetResult();
-        }
-    }
-    
-    public async Task DisplayCurrentPage()
-    {
-        RenderLayout();
-        var content = await currentPage.GetViewAsync();
-        AnsiConsole.Write(content);
 
-        var prompt = currentPage.GetOptions();
-        
+    private async Task RefreshMenuAsync(SelectionPrompt<AsyncActionItem> selectionPrompts)
+    {
         if (_breadcrumbs.Count > 1)
         {
-            prompt.AddChoice(new ActionItem("Go back", GoBack));
+            selectionPrompts.AddChoice(new AsyncActionItem("Go back", () => GoBackAsync()));
         }
         
-        prompt.AddChoices(pages.Select(p => new ActionItem(p.Title, () => NavigateTo(p.Id))));
+        selectionPrompts.AddChoices(pages.Select(p => new AsyncActionItem(p.Title, () => NavigateTo(p.Id))));
         
-        prompt.AddChoice(new ActionItem("Exit", () =>
+        selectionPrompts.AddChoice(new AsyncActionItem("Exit", async () =>
         {
             AnsiConsole.Clear();
             AnsiConsole.WriteLine("Goodbye!");
             Environment.Exit(0);
         }));
         
-        var result = AnsiConsole.Prompt(prompt);
+        var result = AnsiConsole.Prompt(selectionPrompts);
         result.Action();
     }
 
@@ -66,13 +56,11 @@ public class ConsoleWindow
         UpdateBreadcrumbs();
     }
 
-    public void NavigateTo(Guid pageId)
+    public async Task NavigateTo(Guid pageId)
     {
         var page = pages.FirstOrDefault(p => p.Id == pageId);
         if (page != null)
         {
-            currentPage = page;
-
             if (pageId != PageIds.RootPageId) // Check if it's not the RootPage
             {
                 var existingBreadcrumbIndex = _breadcrumbs.FindIndex(b => b.Id == pageId);
@@ -91,7 +79,7 @@ public class ConsoleWindow
     }
 
 
-    public void GoBack()
+    public async Task GoBackAsync()
     {
         if (_breadcrumbs.Count > 1)
         {
@@ -100,7 +88,6 @@ public class ConsoleWindow
             var page = pages.FirstOrDefault(p => p.Id == previousPageId);
             if (page != null)
             {
-                currentPage = page;
                 UpdateBreadcrumbs();
             }
         }
@@ -109,7 +96,6 @@ public class ConsoleWindow
             AnsiConsole.WriteLine("Cannot go back any further");
         }
     }
-
 
     private void UpdateBreadcrumbs()
     {
@@ -120,8 +106,7 @@ public class ConsoleWindow
     
         AnsiConsole.Write(breadcrumbs);
     }
-
-
+    
     private static void UpdateTitle()
     {
         var title = new FigletText("Frank's Service Bus Explorer")
