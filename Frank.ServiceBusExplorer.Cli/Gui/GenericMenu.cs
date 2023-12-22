@@ -1,13 +1,13 @@
 using Spectre.Console;
 
-namespace Frank.ServiceBusExplorer.Gui;
+namespace Frank.ServiceBusExplorer.Cli.Gui;
 
-public class AsyncGenericMenu<T> : IAsyncMenu<T> where T : notnull
+public class GenericMenu<T> : IMenu<T> where T : notnull
 {
     private readonly SelectionPrompt<T> _prompt;
-    private readonly Func<T, Task> _onSelect;
-    
-    public AsyncGenericMenu(string? prompt, IEnumerable<T> items, Func<T, string> converter, Func<T, Task> onSelect)
+    private readonly Action<T> _onSelect;
+
+    public GenericMenu(string? prompt, IEnumerable<T> items, Func<T, string> converter, Action<T> onSelect)
     {
         _onSelect = onSelect;
         _prompt = new SelectionPrompt<T>()
@@ -16,10 +16,10 @@ public class AsyncGenericMenu<T> : IAsyncMenu<T> where T : notnull
             .UseConverter(converter)
             .Title(prompt ?? "Please choose an option...");
     }
-    
-    public Task DisplayAsync()
+
+    public void Display()
     {
         var result = AnsiConsole.Prompt(_prompt);
-        return _onSelect(result);
+        _onSelect(result);
     }
 }

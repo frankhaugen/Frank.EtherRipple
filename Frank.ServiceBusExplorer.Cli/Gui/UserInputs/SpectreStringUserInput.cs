@@ -1,6 +1,6 @@
 using Spectre.Console;
 
-namespace Frank.ServiceBusExplorer.Gui.UserInputs;
+namespace Frank.ServiceBusExplorer.Cli.Gui.UserInputs;
 
 public class SpectreStringUserInput : IUserInput<string>
 {

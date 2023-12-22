@@ -1,4 +1,4 @@
-namespace Frank.ServiceBusExplorer.Gui;
+namespace Frank.ServiceBusExplorer.Cli.Gui;
 
 public interface ITable
 {

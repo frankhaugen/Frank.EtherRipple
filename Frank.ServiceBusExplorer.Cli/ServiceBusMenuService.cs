@@ -1,13 +1,12 @@
 ﻿using System.Text;
-using System.Text.Json;
 
 using Azure.Messaging.ServiceBus;
 
-using Frank.ServiceBusExplorer.Gui;
+using Frank.ServiceBusExplorer.Cli.Gui;
 using Frank.ServiceBusExplorer.Infrastructure;
 using Frank.ServiceBusExplorer.Infrastructure.Entities;
 
-namespace Frank.ServiceBusExplorer;
+namespace Frank.ServiceBusExplorer.Cli;
 
 public class ServiceBusMenuService : IServiceBusMenuService
 {

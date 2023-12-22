@@ -1,8 +1,6 @@
-using System.Text.Json;
-
 using Spectre.Console;
 
-namespace Frank.ServiceBusExplorer.Gui;
+namespace Frank.ServiceBusExplorer.Cli.Gui;
 
 public class JsonPage : IPage
 {

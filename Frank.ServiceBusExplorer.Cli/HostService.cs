@@ -1,4 +1,4 @@
-using Frank.ServiceBusExplorer.Gui;
+using Frank.ServiceBusExplorer.Cli.Gui;
 
 using Microsoft.Extensions.Hosting;
 

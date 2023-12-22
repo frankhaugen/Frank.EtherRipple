@@ -1,8 +1,6 @@
-﻿using System.Text.Json;
+﻿using Frank.ServiceBusExplorer.Cli.Gui.UserInputs;
 
-using Frank.ServiceBusExplorer.Gui.UserInputs;
-
-namespace Frank.ServiceBusExplorer.Gui;
+namespace Frank.ServiceBusExplorer.Cli.Gui;
 
 public class UiFactory : IUIFactory
 {

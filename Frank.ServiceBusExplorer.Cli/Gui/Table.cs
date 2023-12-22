@@ -1,6 +1,6 @@
 using Spectre.Console;
 
-namespace Frank.ServiceBusExplorer.Gui;
+namespace Frank.ServiceBusExplorer.Cli.Gui;
 
 public class Table<T> : ITable
 {
