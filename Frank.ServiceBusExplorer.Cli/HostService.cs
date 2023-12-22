@@ -6,16 +6,18 @@ using Frank.ServiceBusExplorer.Cli.Gui;
 using Frank.ServiceBusExplorer.Cli.Gui.ActionItems;
 using Frank.ServiceBusExplorer.Models;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using Spectre.Console;
 
 namespace Frank.ServiceBusExplorer.Cli;
 
-public class HostService(IHostApplicationLifetime hostApplicationLifetime, IUIFactory uiFactory, IServiceBusRepository serviceBusRepository)
+public class HostService(IHostApplicationLifetime hostApplicationLifetime, IUIFactory uiFactory, IServiceBusRepository serviceBusRepository, IConsoleNavigationService navigationService)
 {
     public async Task StartAsync()
     {
+        SetupLayout();
         try
         {
             await DisplayRootMenuAsync();
@@ -27,28 +29,67 @@ public class HostService(IHostApplicationLifetime hostApplicationLifetime, IUIFa
         }
         DisplayShutDownHaltingMessage();
     }
+    
+    public void SetupLayout()
+    {
+        var grid = new Grid()
+            .AddColumn(new GridColumn().NoWrap().PadRight(1))
+            .AddColumn(new GridColumn().PadLeft(1))
+            .AddRow("[b]Breadcrumbs:[/] " + navigationService.GetBreadcrumbs())
+            .AddEmptyRow();
 
+        var panel = new Panel(grid)
+            .Expand()
+            .BorderStyle(new Style(foreground: Color.Grey))
+            .Header("[b]Service Bus Explorer[/]");
+
+        AnsiConsole.Write(panel);
+    }
+
+    
     private async Task DisplayRootMenuAsync()
     {
         var figlet = new FigletText("Frank's Service Bus Explorer")
             .Centered()
             .Color(Color.Green);
         AnsiConsole.Write(figlet);
+
         var actions = new[]
         {
             new AsyncActionItem() { Name = "Display Service Bus Configuration", Action = DisplayAsync },
+            new AsyncActionItem() { Name = "Display Service Bus Tree", Action = DisplayServiceBusTreeAsync },
             new AsyncActionItem { Name = "Exit", Action = async () => hostApplicationLifetime.StopApplication() }
         };
+
         var menu = uiFactory.CreateAsyncMenu("Select an action", actions, item => item.Name, selectedItem => selectedItem.Action());
         await menu.DisplayAsync();
-        AnsiConsole.MarkupLine("[green]Goodbye[/]");
     }
 
-    private void DisplayShutDownHaltingMessage()
+    private async Task DisplayServiceBusTreeAsync()
     {
-        AnsiConsole.MarkupLine("Press any key to exit...");
-        Console.ReadKey();
-        hostApplicationLifetime.StopApplication();
+        var tree = new Tree("Service Buses")
+            .Style(Style.Parse("green"))
+            .Guide(TreeGuide.Line);
+
+        var serviceBuses = serviceBusRepository.GetServiceBuses();
+        foreach (var serviceBus in serviceBuses)
+        {
+            var serviceBusNode = tree.AddNode(serviceBus.Name);
+            var topics = await serviceBusRepository.GetTopicsAsync(serviceBus.Name, hostApplicationLifetime.ApplicationStopping);
+
+            foreach (var topic in topics)
+            {
+                var topicNode = serviceBusNode.AddNode(topic.Name);
+                var subscriptions = await serviceBusRepository.GetSubscriptionsAsync(serviceBus.Name, topic.Name, hostApplicationLifetime.ApplicationStopping);
+
+                foreach (var subscription in subscriptions)
+                {
+                    topicNode.AddNode($"{subscription.Name} (Messages: {subscription.ActiveMessageCount}, Dead Letters: {subscription.DeadLetterMessageCount})");
+                }
+            }
+        }
+
+        AnsiConsole.Write(tree);
     }
 
     private Task DisplayAsync()
@@ -82,6 +123,13 @@ public class HostService(IHostApplicationLifetime hostApplicationLifetime, IUIFa
         };
         var messageMenu = uiFactory.CreateAsyncMenu("Select an option", actions, action => action.Name, message => message.Action());
         return messageMenu.DisplayAsync();
+    }
+    
+    private void DisplayShutDownHaltingMessage()
+    {
+        AnsiConsole.MarkupLine("Press any key to exit...");
+        Console.ReadKey();
+        hostApplicationLifetime.StopApplication();
     }
     
     private async Task ShowMessagesMenuAsync(string serviceBusName, string topicName, string subscriptionName)
