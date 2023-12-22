@@ -3,8 +3,6 @@
 using Frank.ServiceBusExplorer;
 using Frank.ServiceBusExplorer.Cli;
 using Frank.ServiceBusExplorer.Cli.Gui;
-using Frank.ServiceBusExplorer.Infrastructure;
-using Frank.ServiceBusExplorer.Infrastructure.Configuration;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

@@ -2,7 +2,7 @@ using Azure;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
 
-namespace Frank.ServiceBusExplorer.Infrastructure;
+namespace Frank.ServiceBusExplorer;
 
 public class ServiceBusEntityFactory
 {

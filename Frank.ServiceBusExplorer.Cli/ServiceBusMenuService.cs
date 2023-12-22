@@ -3,8 +3,6 @@
 using Azure.Messaging.ServiceBus;
 
 using Frank.ServiceBusExplorer.Cli.Gui;
-using Frank.ServiceBusExplorer.Infrastructure;
-using Frank.ServiceBusExplorer.Infrastructure.Entities;
 
 namespace Frank.ServiceBusExplorer.Cli;
 

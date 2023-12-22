@@ -1,8 +1,6 @@
 using Azure.Messaging.ServiceBus;
 
-using Frank.ServiceBusExplorer.Infrastructure.Entities;
-
-namespace Frank.ServiceBusExplorer.Infrastructure;
+namespace Frank.ServiceBusExplorer;
 
 public interface IServiceBusRepository
 {

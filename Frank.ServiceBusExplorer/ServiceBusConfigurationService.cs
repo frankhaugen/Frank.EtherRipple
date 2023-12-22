@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Frank.ServiceBusExplorer.Infrastructure.Configuration;
+namespace Frank.ServiceBusExplorer;
 
 public class ServiceBusConfigurationService : IServiceBusConfigurationService
 {
