@@ -11,7 +11,6 @@ var builder = Host.CreateEmptyApplicationBuilder(new HostApplicationBuilderSetti
 
 builder.Services.AddSingleton<IServiceBusConfiguration>(new ServiceBusConfiguration(new FileInfo(Path.Combine(AppContext.BaseDirectory, "ServiceBusConfigurationItems.json"))));
 builder.Services.AddSingleton<IUIFactory, UiFactory>();
-builder.Services.AddSingleton<IServiceBusMenuService, ServiceBusMenuService>();
 builder.Services.AddSingleton<IServiceBusRepository, ServiceBusRepository>();
 builder.Services.AddSingleton<HostService>();
 
