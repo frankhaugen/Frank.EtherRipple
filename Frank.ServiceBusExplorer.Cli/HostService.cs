@@ -12,19 +12,8 @@ using Spectre.Console;
 
 namespace Frank.ServiceBusExplorer.Cli;
 
-public class HostService
+public class HostService(IHostApplicationLifetime hostApplicationLifetime, IUIFactory uiFactory, IServiceBusRepository serviceBusRepository)
 {
-    private readonly IHostApplicationLifetime _hostApplicationLifetime;
-    private readonly IUIFactory _uiFactory;
-    private readonly IServiceBusRepository _serviceBusRepository;
-
-    public HostService(IHostApplicationLifetime hostApplicationLifetime, IUIFactory uiFactory, IServiceBusRepository serviceBusRepository)
-    {
-        _hostApplicationLifetime = hostApplicationLifetime;
-        _uiFactory = uiFactory;
-        _serviceBusRepository = serviceBusRepository;
-    }
-
     public async Task StartAsync()
     {
         try
@@ -33,7 +22,7 @@ public class HostService
         }
         catch (Exception e)
         {
-            var alert = _uiFactory.CreateAlert();
+            var alert = uiFactory.CreateAlert();
             alert.ShowException(e);
         }
         DisplayShutDownHaltingMessage();
@@ -48,9 +37,9 @@ public class HostService
         var actions = new[]
         {
             new AsyncActionItem() { Name = "Display Service Bus Configuration", Action = DisplayAsync },
-            new AsyncActionItem { Name = "Exit", Action = async () => _hostApplicationLifetime.StopApplication() }
+            new AsyncActionItem { Name = "Exit", Action = async () => hostApplicationLifetime.StopApplication() }
         };
-        var menu = _uiFactory.CreateAsyncMenu("Select an action", actions, item => item.Name, selectedItem => selectedItem.Action());
+        var menu = uiFactory.CreateAsyncMenu("Select an action", actions, item => item.Name, selectedItem => selectedItem.Action());
         await menu.DisplayAsync();
         AnsiConsole.MarkupLine("[green]Goodbye[/]");
     }
@@ -59,31 +48,31 @@ public class HostService
     {
         AnsiConsole.MarkupLine("Press any key to exit...");
         Console.ReadKey();
-        _hostApplicationLifetime.StopApplication();
+        hostApplicationLifetime.StopApplication();
     }
 
-    private async Task DisplayAsync()
+    private Task DisplayAsync()
     {
-        var serviceBuses = _serviceBusRepository.GetServiceBuses();
-        var serviceBusMenu = _uiFactory.CreateAsyncMenu("Select a Service Bus", serviceBuses, bus => bus.Name, selectedBus => ShowTopicsMenuAsync(selectedBus));
-        await serviceBusMenu.DisplayAsync();
+        var serviceBuses = serviceBusRepository.GetServiceBuses();
+        var serviceBusMenu = uiFactory.CreateAsyncMenu("Select a Service Bus", serviceBuses, bus => bus.Name, ShowTopicsMenuAsync);
+        return serviceBusMenu.DisplayAsync();
     }
 
     private async Task ShowTopicsMenuAsync(ServiceBusEntity serviceBus)
     {
-        var topics = await _serviceBusRepository.GetTopicsAsync(serviceBus.Name, _hostApplicationLifetime.ApplicationStopping);
-        var topicMenu = _uiFactory.CreateAsyncMenu("Select a Topic", topics, topic => topic.Name, topic => ShowSubscriptionsMenuAsync(serviceBus.Name, topic));
+        var topics = await serviceBusRepository.GetTopicsAsync(serviceBus.Name, hostApplicationLifetime.ApplicationStopping);
+        var topicMenu = uiFactory.CreateAsyncMenu("Select a Topic", topics, topic => topic.Name, topic => ShowSubscriptionsMenuAsync(serviceBus.Name, topic));
         await topicMenu.DisplayAsync();
     }
 
     private async Task ShowSubscriptionsMenuAsync(string serviceBusName, TopicEntity topic)
     {
-        var subscriptions = await _serviceBusRepository.GetSubscriptionsAsync(serviceBusName, topic.Name, _hostApplicationLifetime.ApplicationStopping);
-        var subscriptionMenu = _uiFactory.CreateAsyncMenu("Select a Subscription", subscriptions, subscription => $"{subscription.Name} ({subscription.ActiveMessageCount})", entity => ShowSubscriptionMenuAsync(entity, serviceBusName, topic.Name));
+        var subscriptions = await serviceBusRepository.GetSubscriptionsAsync(serviceBusName, topic.Name, hostApplicationLifetime.ApplicationStopping);
+        var subscriptionMenu = uiFactory.CreateAsyncMenu("Select a Subscription", subscriptions, subscription => $"{subscription.Name} ({subscription.ActiveMessageCount})", entity => ShowSubscriptionMenuAsync(entity, serviceBusName, topic.Name));
         await subscriptionMenu.DisplayAsync();
     }
 
-    private async Task ShowSubscriptionMenuAsync(SubscriptionEntity subscription, string serviceBusName, string topicName)
+    private Task ShowSubscriptionMenuAsync(SubscriptionEntity subscription, string serviceBusName, string topicName)
     {
         var actions = new[]
         {
@@ -91,33 +80,35 @@ public class HostService
             new AsyncActionItem { Name = $"Show Dead Letter Messages {subscription.DeadLetterMessageCount}", Action = () => ShowDeadLetterMessagesMenuAsync(serviceBusName, topicName, subscription.Name) },
             new AsyncActionItem { Name = "Back", Action = () => Task.CompletedTask }
         };
-        var messageMenu = _uiFactory.CreateAsyncMenu("Select an option", actions, action => action.Name, message => message.Action());
-        await messageMenu.DisplayAsync();
+        var messageMenu = uiFactory.CreateAsyncMenu("Select an option", actions, action => action.Name, message => message.Action());
+        return messageMenu.DisplayAsync();
     }
-
+    
+    private async Task ShowMessagesMenuAsync(string serviceBusName, string topicName, string subscriptionName)
+    {
+        var messages = await serviceBusRepository.GetMessagesAsync(serviceBusName, topicName, subscriptionName, hostApplicationLifetime.ApplicationStopping);
+        DisplayMessagesAsync(messages);
+    }
+    
     private async Task ShowDeadLetterMessagesMenuAsync(string serviceBusName, string topicName, string subscriptionName)
     {
-        var messages = await _serviceBusRepository.GetDeadLetterMessagesAsync(serviceBusName, topicName, subscriptionName, _hostApplicationLifetime.ApplicationStopping);
-        
-        await DisplayMessagesAsync(messages);
+        var messages = await serviceBusRepository.GetDeadLetterMessagesAsync(serviceBusName, topicName, subscriptionName, hostApplicationLifetime.ApplicationStopping);
+        DisplayMessagesAsync(messages);
     }
-
-    private async Task DisplayMessagesAsync(IEnumerable<ServiceBusReceivedMessage> messages)
+    
+    private void DisplayMessagesAsync(IEnumerable<ServiceBusReceivedMessage> messages)
     {
-        var menu = _uiFactory.CreateAsyncMenu("Select a message", messages, ConvertToMessageEssentials, ShowMessageAsync);
-        await menu.DisplayAsync();
-        await Task.CompletedTask;
+        var menu = uiFactory.CreateMenu("Select a message", messages, ConvertToMessageEssentials, ShowMessage);
+        menu.Display();
     }
-
-    private Task ShowMessageAsync(ServiceBusReceivedMessage message)
+    
+    private void ShowMessage(ServiceBusReceivedMessage message)
     {
-        var jsonPage = _uiFactory.CreateTextPage("Message body", message.Body.ToString());
+        var jsonPage = uiFactory.CreateTextPage("Message body", message.Body.ToString());
         jsonPage.Display();
-        
-        return Task.CompletedTask;
     }
 
-    private string ConvertToMessageEssentials(ServiceBusReceivedMessage arg)
+    private static string ConvertToMessageEssentials(ServiceBusReceivedMessage arg)
     {
         var stringBuilder = new StringBuilder();
         
@@ -125,21 +116,14 @@ public class HostService
         stringBuilder.Append(" | ");
         stringBuilder.Append($"SequenceNumber: {arg.SequenceNumber}");
         stringBuilder.Append(" | ");
-        stringBuilder.Append($"EnqueuedTime: {arg.EnqueuedTime}");
+        stringBuilder.Append($"EnqueuedTime: {arg.EnqueuedTime.ToString("s")}");
         stringBuilder.Append(" | ");
-        stringBuilder.Append($"ExpiresAt: {arg.ExpiresAt}");
+        stringBuilder.Append($"ExpiresAt: {arg.ExpiresAt.ToString("s")}");
         stringBuilder.Append(" | ");
         stringBuilder.Append($"CorrelationId: {arg.CorrelationId}");
         stringBuilder.Append(" | ");
         stringBuilder.Append($"Subject: {arg.Subject}");
         
         return stringBuilder.ToString();
-    }
-
-    private async Task ShowMessagesMenuAsync(string serviceBusName, string topicName, string subscriptionName)
-    {
-        var messages = await _serviceBusRepository.GetMessagesAsync(serviceBusName, topicName, subscriptionName, _hostApplicationLifetime.ApplicationStopping);
-        
-        await DisplayMessagesAsync(messages);
     }
 }
