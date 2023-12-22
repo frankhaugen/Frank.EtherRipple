@@ -1,3 +1,4 @@
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -17,6 +18,8 @@ internal class Program
             {
                 context.SetContentPathToApplicationDirectory();
 
+                services.AddSingleton<IServiceBusConfiguration>(new ServiceBusConfiguration(new FileInfo(Path.Combine(AppContext.BaseDirectory, "ServiceBusConfigurationItems.json"))));
+                services.AddSingleton<IServiceBusRepository, ServiceBusRepository>();
                 services.AddScoped<Application>();
 
                 services.AddHostedService<Worker>();

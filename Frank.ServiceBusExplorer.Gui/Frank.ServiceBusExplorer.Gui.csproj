@@ -14,4 +14,10 @@
     <ItemGroup>
       <ProjectReference Include="..\Frank.ServiceBusExplorer\Frank.ServiceBusExplorer.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Include="ServiceBusConfigurationItems.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>
