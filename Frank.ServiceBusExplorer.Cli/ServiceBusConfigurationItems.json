@@ -1,0 +1,10 @@
+[
+  {
+    "Name": "Bulbasaur",
+    "ConnectionString": "Server=ddd;Database=ddd;User Id=ddd;Password=ddd;"
+  },
+  {
+    "Name": "Ivysaur",
+    "ConnectionString": "Server=ddd;Database=ddd;User Id=ddd;Password=ddd;"
+  }
+]
