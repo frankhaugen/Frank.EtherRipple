@@ -1,7 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using Frank.ServiceBusExplorer;
-using Frank.ServiceBusExplorer.Cli;
 using Frank.ServiceBusExplorer.Cli.GuiFrameworkWip;
 
 using Microsoft.Extensions.DependencyInjection;
