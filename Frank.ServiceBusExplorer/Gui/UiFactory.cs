@@ -1,4 +1,6 @@
-﻿using Frank.ServiceBusExplorer.Gui.UserInputs;
+﻿using System.Text.Json;
+
+using Frank.ServiceBusExplorer.Gui.UserInputs;
 
 namespace Frank.ServiceBusExplorer.Gui;
 
@@ -11,5 +13,12 @@ public class UiFactory : IUIFactory
     public IMenu<T> CreateMenu<T>(string? prompt, IEnumerable<T> items, Func<T, string> converter, Action<T> onSelect) where T : notnull
         => new GenericMenu<T>(prompt, items, converter, onSelect);
 
-    public ActionItemMenu CreateActionMenu(string? prompt, IEnumerable<ActionItem> items, Action<ActionItem> onSelect) => new(prompt, items, onSelect);
+    public IAsyncMenu<T> CreateAsyncMenu<T>(string? prompt, IEnumerable<T> items, Func<T, string> converter, Func<T, Task> onSelectAsync) where T : notnull
+        => new AsyncGenericMenu<T>(prompt, items, converter, onSelectAsync);
+
+    public ActionItemMenu CreateActionMenu(string? prompt, IEnumerable<ActionItem> items, Action<ActionItem> onSelect) 
+        => new(prompt, items, onSelect);
+
+    public ITable CreateTable<T>(IEnumerable<T> items, Func<T, string[]> converter) => new Table<T>(items, converter);
+    public IPage CreateJsonPage(string jsonDocument) => new JsonPage(jsonDocument);
 }

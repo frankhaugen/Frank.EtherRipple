@@ -17,7 +17,7 @@ public class SpectreAlert : IAlert
     public void ShowException(Exception exception)
     {
         AnsiConsole.MarkupLine($"[red bold]{exception.Message}[/]");
-        AnsiConsole.MarkupLine($"[red bold]{exception.StackTrace}[/]");
+        AnsiConsole.WriteException(exception, ExceptionFormats.ShortenPaths | ExceptionFormats.ShowLinks);
         if (exception.InnerException != null) ShowException(exception.InnerException);
     }
 }

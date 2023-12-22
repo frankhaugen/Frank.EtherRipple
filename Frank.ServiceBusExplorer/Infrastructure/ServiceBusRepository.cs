@@ -53,11 +53,7 @@ public class ServiceBusRepository : IServiceBusRepository
     {
         var client = _serviceBusEntityFactories[serviceBusName];
         var receiver = client.GetSubscriptionReceiver(topicName, subscriptionName);
-        var messages = new List<ServiceBusReceivedMessage>();
-        await foreach (var message in receiver.ReceiveMessagesAsync(cancellationToken))
-        {
-            messages.Add(message);
-        }
+        var messages = await receiver.ReceiveMessagesAsync(10, TimeSpan.FromSeconds(3), cancellationToken);
         return messages;
     }
 
@@ -65,11 +61,7 @@ public class ServiceBusRepository : IServiceBusRepository
     {
         var client = _serviceBusEntityFactories[serviceBusName];
         var receiver = client.GetDeadLetterReceiver(topicName, subscriptionName);
-        var messages = new List<ServiceBusReceivedMessage>();
-        await foreach (var message in receiver.ReceiveMessagesAsync(cancellationToken))
-        {
-            messages.Add(message);
-        }
+        var messages = await receiver.ReceiveMessagesAsync(10, TimeSpan.FromSeconds(3), cancellationToken);
         return messages;
     }
 }

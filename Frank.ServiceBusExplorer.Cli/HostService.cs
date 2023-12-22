@@ -1,62 +1,58 @@
-using Frank.ServiceBusExplorer;
 using Frank.ServiceBusExplorer.Gui;
-using Frank.ServiceBusExplorer.Infrastructure.Configuration;
 
 using Microsoft.Extensions.Hosting;
 
 using Spectre.Console;
 
+namespace Frank.ServiceBusExplorer.Cli;
+
 public class HostService
 {
     private readonly IHostApplicationLifetime _hostApplicationLifetime;
     private readonly IUIFactory _uiFactory;
-    private readonly IServiceBusConfigurationService _serviceBusConfigurationService;
+    private readonly IServiceBusMenuService _serviceBusMenuService;
 
-    public HostService(IHostApplicationLifetime hostApplicationLifetime, IUIFactory uiFactory, IServiceBusConfigurationService serviceBusConfigurationService)
+    public HostService(IHostApplicationLifetime hostApplicationLifetime, IUIFactory uiFactory, IServiceBusMenuService serviceBusMenuService)
     {
         _hostApplicationLifetime = hostApplicationLifetime;
         _uiFactory = uiFactory;
-        _serviceBusConfigurationService = serviceBusConfigurationService;
+        _serviceBusMenuService = serviceBusMenuService;
     }
 
-    public void Start()
+    public async Task StartAsync()
     {
         try
         {
-            DisplayRootMenu();
+            await DisplayRootMenuAsync();
         }
         catch (Exception e)
         {
             var alert = _uiFactory.CreateAlert();
             alert.ShowException(e);
         }
-    }
-    
-    public void DisplayRootMenu()
-    {
-        AnsiConsole.MarkupLine("[green]Welcome to the Service Bus Explorer[/]");
-        var actions = new[]
-        {
-            new ActionItem { Name = "Display Service Bus Configuration", Action = DisplayServiceBusConfiguration },
-            new ActionItem { Name = "Exit", Action = () => _hostApplicationLifetime.StopApplication() }
-        };
-        var menu = _uiFactory.CreateActionMenu("Select an action", actions, selectedItem => selectedItem.Action.Invoke());
-        menu.Display();
-        AnsiConsole.MarkupLine("[green]Goodbye[/]");
-    }
-    
-    public void DisplayServiceBusConfiguration()
-    {
-        var configurationItems = _serviceBusConfigurationService.GetServiceBusConfigurationItems();
-
-        ServiceBusConfigurationItem? choice = null;
-        var menu = _uiFactory.CreateMenu<ServiceBusConfigurationItem>("Select", configurationItems, item => item.Name, selectedItem => choice = selectedItem);
-        menu.Display();
-        AnsiConsole.MarkupLine($"You chose [green]{choice!.Name}[/]");
         DisplayShutDownHaltingMessage();
     }
-    
-    public void DisplayShutDownHaltingMessage()
+
+    private async Task DisplayRootMenuAsync()
+    {
+        var figlet = new FigletText("Frank's Service Bus Explorer")
+            .Centered()
+            .Color(Color.Green);
+        AnsiConsole.Write(figlet);
+        var actions = new[]
+        {
+            new AsyncActionItem() { Name = "Display Service Bus Configuration", Action = DisplayServiceBusConfiguration },
+            new AsyncActionItem { Name = "Exit", Action = async () => _hostApplicationLifetime.StopApplication() }
+        };
+        var menu = _uiFactory.CreateAsyncMenu("Select an action", actions, item => item.Name, selectedItem => selectedItem.Action());
+        await menu.DisplayAsync();
+        AnsiConsole.MarkupLine("[green]Goodbye[/]");
+    }
+
+    private async Task DisplayServiceBusConfiguration() 
+        => await _serviceBusMenuService.DisplayAsync(_hostApplicationLifetime.ApplicationStopping);
+
+    private void DisplayShutDownHaltingMessage()
     {
         AnsiConsole.MarkupLine("Press any key to exit...");
         Console.ReadKey();
