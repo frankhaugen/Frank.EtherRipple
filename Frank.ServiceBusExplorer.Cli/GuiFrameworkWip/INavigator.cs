@@ -1,5 +1,4 @@
 ﻿using Frank.ServiceBusExplorer.Cli.GuiFrameworkWip.ActionItems;
-using Frank.ServiceBusExplorer.Models;
 
 using Spectre.Console;
 

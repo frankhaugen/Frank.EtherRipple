@@ -1,7 +1,5 @@
 ﻿using System.Windows.Controls;
 
-using Azure.Messaging.ServiceBus;
-
 using Frank.ServiceBusExplorer.Models;
 
 namespace Frank.ServiceBusExplorer.Gui.UserControls;
@@ -21,9 +19,5 @@ public class MessagesExpander : Expander
         _subscription = subscription;
 
         Header = header;
-        
-        var messages = _serviceBusRepository.GetMessagesAsync(_serviceBus.Name, _topic.Name, _subscription.Name, CancellationToken.None).Result.ToList();
-        
-        Content = new ListViewModel<ServiceBusReceivedMessage>(messages);
     }
 }

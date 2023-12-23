@@ -64,4 +64,11 @@ public class ServiceBusRepository : IServiceBusRepository
         var messages = await receiver.ReceiveMessagesAsync(10, TimeSpan.FromSeconds(3), cancellationToken);
         return messages;
     }
+
+    public async Task CompleteMessageAsync(ServiceBusReceivedMessage message, ServiceBusEntity serviceBusEntity, TopicEntity topicEntity, SubscriptionEntity subscriptionEntity)
+    {
+        var client = _serviceBusEntityFactories[serviceBusEntity.Name];
+        var receiver = client.GetSubscriptionReceiver(topicEntity.Name, subscriptionEntity.Name);
+        await receiver.CompleteMessageAsync(message);
+    }
 }
