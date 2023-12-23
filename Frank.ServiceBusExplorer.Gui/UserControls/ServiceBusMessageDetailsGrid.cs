@@ -38,12 +38,13 @@ public class ServiceBusMessageDetailsGrid : Grid
                 {
                     SetColumnSpan(groupBox,3);
                     
-                    var scrollViewer = new ScrollViewer
-                    {
-                        VerticalScrollBarVisibility = ScrollBarVisibility.Auto
-                    };
-                    groupBox.Content = scrollViewer;
                 }
+                
+                var scrollViewer = new ScrollViewer
+                {
+                    VerticalScrollBarVisibility = ScrollBarVisibility.Auto
+                };
+                groupBox.Content = scrollViewer;
 
                 if (row == 1 && col >= 1)
                 {
@@ -63,9 +64,8 @@ public class ServiceBusMessageDetailsGrid : Grid
 
         var groupBox = _groupBoxes[row, col];
 
-        if (row == 1 && col == 1 && groupBox.Content is ScrollViewer scrollViewer)
+        if (groupBox.Content is ScrollViewer scrollViewer)
         {
-            // For the center cell, set the content of the ScrollViewer
             scrollViewer.Content = content;
         }
         else
