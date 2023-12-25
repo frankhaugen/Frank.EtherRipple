@@ -12,9 +12,9 @@ namespace Frank.ServiceBusExplorer.Gui.UserControls;
 
 public class IconButton : Button
 {
-    public static IconButton Create(MaterialIconKind kind, Action action, string tooltip)
+    public static IconButton Create(MaterialIconKind kind, Func<Task> action, string tooltip)
     {
-        return new IconButton(new MaterialIcon() {Kind = kind}, new RelayCommand(o => action.Invoke())) {ToolTip = tooltip};
+        return new IconButton(new MaterialIcon() {Kind = kind}, new AsyncRelayCommand(action)) {ToolTip = tooltip};
     }
     
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(

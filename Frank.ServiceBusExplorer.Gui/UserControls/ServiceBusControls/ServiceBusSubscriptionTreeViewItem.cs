@@ -3,7 +3,7 @@
 using Frank.ServiceBusExplorer.Gui.UserControlFactories;
 using Frank.ServiceBusExplorer.Models;
 
-namespace Frank.ServiceBusExplorer.Gui.UserControls;
+namespace Frank.ServiceBusExplorer.Gui.UserControls.ServiceBusControls;
 
 public class ServiceBusSubscriptionTreeViewItem : TreeViewItem
 {

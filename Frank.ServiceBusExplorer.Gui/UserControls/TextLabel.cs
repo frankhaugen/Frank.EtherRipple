@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Frank.ServiceBusExplorer.Gui.DialogWindows;
+namespace Frank.ServiceBusExplorer.Gui.UserControls;
 
 public class TextLabel : GroupBox
 {

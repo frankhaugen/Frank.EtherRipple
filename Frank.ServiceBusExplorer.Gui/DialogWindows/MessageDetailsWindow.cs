@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 
 using Frank.ServiceBusExplorer.Gui.UserControls;
+using Frank.ServiceBusExplorer.Gui.UserControls.ServiceBusControls;
 using Frank.ServiceBusExplorer.Models;
 
 using ICSharpCode.AvalonEdit.Highlighting;
@@ -18,6 +19,9 @@ public class MessageDetailsWindow : Window
     private readonly TopicEntity _topicEntity;
     private readonly SubscriptionEntity _subscriptionEntity;
     private readonly ServiceBusMessageDetailsGrid _serviceBusMessageDetailsGrid = new();
+    
+    public static MessageDetailsWindow Create(IServiceBusRepository serviceBusRepository, ServiceBusReceivedMessage message, ServiceBusEntity serviceBusEntity, TopicEntity topicEntity, SubscriptionEntity subscriptionEntity) =>
+        new(serviceBusRepository, message, serviceBusEntity, topicEntity, subscriptionEntity);
 
     public MessageDetailsWindow(IServiceBusRepository serviceBusRepository, ServiceBusReceivedMessage message, ServiceBusEntity serviceBusEntity, TopicEntity topicEntity, SubscriptionEntity subscriptionEntity)
     {

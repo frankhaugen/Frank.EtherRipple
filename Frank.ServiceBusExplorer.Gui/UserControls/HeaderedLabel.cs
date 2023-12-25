@@ -1,12 +1,12 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Frank.ServiceBusExplorer.Gui.DialogWindows;
+namespace Frank.ServiceBusExplorer.Gui.UserControls;
 
 public class HeaderedLabel : UserControl
 {
-    private Label _headerLabel;
-    private Label _textLabel;
+    private readonly Label _headerLabel;
+    private readonly Label _textLabel;
     
     public HeaderedLabel(string header, string text) : this()
     {

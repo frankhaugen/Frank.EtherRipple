@@ -1,8 +1,9 @@
 ﻿using Frank.ServiceBusExplorer.Gui.UserControls;
+using Frank.ServiceBusExplorer.Gui.UserControls.ServiceBusControls;
 
 namespace Frank.ServiceBusExplorer.Gui.UserControlFactories;
 
-internal interface IServiceBusTreeViewFactory
+public interface IServiceBusTreeViewFactory
 {
     ServiceBusTreeView Create();
 }

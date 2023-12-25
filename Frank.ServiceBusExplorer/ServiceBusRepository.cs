@@ -49,18 +49,10 @@ public class ServiceBusRepository : IServiceBusRepository
         return subscriptions;
     }
 
-    public async Task<IEnumerable<ServiceBusReceivedMessage>> GetMessagesAsync(string serviceBusName, string topicName, string subscriptionName, CancellationToken cancellationToken)
+    public async Task<IEnumerable<ServiceBusReceivedMessage>> GetMessagesAsync(string serviceBusName, string topicName, string subscriptionName, SubQueue subQueue, CancellationToken cancellationToken)
     {
         var client = _serviceBusEntityFactories[serviceBusName];
-        var receiver = client.GetSubscriptionReceiver(topicName, subscriptionName);
-        var messages = await receiver.ReceiveMessagesAsync(10, TimeSpan.FromSeconds(3), cancellationToken);
-        return messages;
-    }
-
-    public async Task<IEnumerable<ServiceBusReceivedMessage>> GetDeadLetterMessagesAsync(string serviceBusName, string topicName, string subscriptionName, CancellationToken cancellationToken)
-    {
-        var client = _serviceBusEntityFactories[serviceBusName];
-        var receiver = client.GetDeadLetterReceiver(topicName, subscriptionName);
+        var receiver = client.GetSubscriptionReceiver(topicName, subscriptionName, subQueue);
         var messages = await receiver.ReceiveMessagesAsync(10, TimeSpan.FromSeconds(3), cancellationToken);
         return messages;
     }
@@ -68,14 +60,14 @@ public class ServiceBusRepository : IServiceBusRepository
     public async Task CompleteMessageAsync(ServiceBusReceivedMessage message, ServiceBusEntity serviceBusEntity, TopicEntity topicEntity, SubscriptionEntity subscriptionEntity)
     {
         var client = _serviceBusEntityFactories[serviceBusEntity.Name];
-        var receiver = client.GetSubscriptionReceiver(topicEntity.Name, subscriptionEntity.Name);
+        var receiver = client.GetSubscriptionReceiver(topicEntity.Name, subscriptionEntity.Name, SubQueue.None);
         await receiver.CompleteMessageAsync(message);
     }
     
     public async Task DeadLetterMessageAsync(ServiceBusReceivedMessage message, ServiceBusEntity serviceBusEntity, TopicEntity topicEntity, SubscriptionEntity subscriptionEntity)
     {
         var client = _serviceBusEntityFactories[serviceBusEntity.Name];
-        var receiver = client.GetSubscriptionReceiver(topicEntity.Name, subscriptionEntity.Name);
+        var receiver = client.GetSubscriptionReceiver(topicEntity.Name, subscriptionEntity.Name, SubQueue.None);
         await receiver.DeadLetterMessageAsync(message);
     }
 }

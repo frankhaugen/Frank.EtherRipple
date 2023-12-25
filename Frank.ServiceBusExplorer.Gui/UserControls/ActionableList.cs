@@ -5,6 +5,16 @@ namespace Frank.ServiceBusExplorer.Gui.UserControls;
 
 public class ActionableList : ItemsControl
 {
+    public static ActionableList Create(params ActionableListItem[] items)
+    {
+        var actionableList = new ActionableList();
+        foreach (var item in items)
+        {
+            actionableList.Items.Add(item);
+        }
+        return actionableList;
+    }
+    
     public ActionableList()
     {
         // Custom initialization, if needed

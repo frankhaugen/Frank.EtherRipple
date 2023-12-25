@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Frank.ServiceBusExplorer.Gui.UserControls;
+namespace Frank.ServiceBusExplorer.Gui.UserControls.ServiceBusControls;
 
 public class ServiceBusMessageDetailsGrid : Grid
 {

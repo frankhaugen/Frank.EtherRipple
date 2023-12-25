@@ -2,7 +2,7 @@
 
 using Frank.ServiceBusExplorer.Gui.UserControlFactories;
 
-namespace Frank.ServiceBusExplorer.Gui.UserControls;
+namespace Frank.ServiceBusExplorer.Gui.UserControls.ServiceBusControls;
 
 public class ServiceBusTreeView : TreeView
 {

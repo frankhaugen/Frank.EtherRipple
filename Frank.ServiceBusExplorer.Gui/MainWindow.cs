@@ -1,12 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 
-using Frank.ServiceBusExplorer.Gui.Commands;
-using Frank.ServiceBusExplorer.Gui.UserControlFactories;
-using Frank.ServiceBusExplorer.Gui.UserControls;
-
-using Material.Icons;
-using Material.Icons.WPF;
+using Frank.ServiceBusExplorer.Gui.Pages;
 
 namespace Frank.ServiceBusExplorer.Gui;
 
@@ -14,34 +9,11 @@ internal class MainWindow : Window
 {
     private readonly ILogger<MainWindow> _logger;
 
-    public MainWindow(ILogger<MainWindow> logger, IServiceBusTreeViewFactory serviceBusTreeViewFactory)
+    public MainWindow(ILogger<MainWindow> logger, ServiceBusTreeViewPage serviceBusTreeViewPage)
     {
         _logger = logger;
-
         ConfigureWindow();
-        
-        var listExperiment = new ActionableList();
-        
-        listExperiment.Items.Add(new ActionableListItem()
-        {
-            Text = "Hello",
-            Actions = new List<IconButton>()
-            {
-                IconButton.Create(MaterialIconKind.Details, () => MessageBox.Show("Accelerometer"), "Open Accelerometer"),
-            },
-        });
-        
-        listExperiment.Items.Add(new ActionableListItem()
-        {
-            Text = "World",
-            Actions = new List<IconButton>()
-            {
-                IconButton.Create(MaterialIconKind.AccessPoint, () => MessageBox.Show("AccessPoint"), "Show AccessPoint"),
-                new IconButton(new MaterialIcon() {Kind = MaterialIconKind.Edit}, new RelayCommand(o => { MessageBox.Show("Edit"); })),
-            },
-        });
-        
-        Content = listExperiment;
+        Content = serviceBusTreeViewPage;
     }
 
     private void ConfigureWindow()

@@ -15,6 +15,16 @@ public class ActionableListItem : UserControl
         InitializeComponents();
         DataContext = this; // Set the DataContext for binding to work
     }
+    
+    public static ActionableListItem Create(string text, params IconButton[] actions)
+    {
+        var item = new ActionableListItem 
+        { 
+            Text = text,
+            Actions = actions
+        };
+        return item;
+    }
 
     public string Text
     {

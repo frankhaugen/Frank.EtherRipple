@@ -32,9 +32,6 @@ public class ServiceBusEntityFactory
     public AsyncPageable<SubscriptionRuntimeProperties> GetSubscriptionsAsync(string topicName, CancellationToken cancellationToken) 
         => _administrationClient.GetSubscriptionsRuntimePropertiesAsync(topicName, cancellationToken);
 
-    public ServiceBusReceiver GetSubscriptionReceiver(string topicName, string subscriptionName) 
-        => _client.CreateReceiver(topicName, subscriptionName, new ServiceBusReceiverOptions() { SubQueue = SubQueue.None, ReceiveMode = ServiceBusReceiveMode.PeekLock});
-
-    public ServiceBusReceiver GetDeadLetterReceiver(string topicName, string subscriptionName) 
-        => _client.CreateReceiver(topicName, subscriptionName, new ServiceBusReceiverOptions() { SubQueue = SubQueue.DeadLetter, ReceiveMode = ServiceBusReceiveMode.PeekLock});
+    public ServiceBusReceiver GetSubscriptionReceiver(string topicName, string subscriptionName, SubQueue subQueue) 
+        => _client.CreateReceiver(topicName, subscriptionName, new ServiceBusReceiverOptions() { SubQueue = subQueue, ReceiveMode = ServiceBusReceiveMode.PeekLock});
 }
