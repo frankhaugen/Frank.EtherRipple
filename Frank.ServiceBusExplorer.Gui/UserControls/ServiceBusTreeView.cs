@@ -1,24 +1,16 @@
 ﻿using System.Windows.Controls;
 
 using Frank.ServiceBusExplorer.Gui.UserControlFactories;
-using Frank.ServiceBusExplorer.Models;
 
 namespace Frank.ServiceBusExplorer.Gui.UserControls;
 
 public class ServiceBusTreeView : TreeView
 {
-    private readonly IServiceBusRepository _serviceBusRepository;
-
-    private readonly List<ServiceBusEntity> _entities = new();
-    
-    public ServiceBusTreeView(IServiceBusRepository serviceBusRepository, IServiceBusTopicTreeViewItemFactory serviceBusTopicTreeViewItemFactory)
+    public ServiceBusTreeView(IServiceBusRepository serviceBusRepository, IServiceBusTreeViewItemFactory serviceBusTreeViewItemFactory)
     {
-        _serviceBusRepository = serviceBusRepository;
-        _entities = _serviceBusRepository.GetServiceBuses().ToList();
-        
-        foreach (var entity in _entities)
+        foreach (var entity in serviceBusRepository.GetServiceBuses())
         {
-            var serviceBusTreeViewItem = new ServiceBusTreeViewItem(_serviceBusRepository, entity, serviceBusTopicTreeViewItemFactory);
+            var serviceBusTreeViewItem = serviceBusTreeViewItemFactory.Create(entity);
             Items.Add(serviceBusTreeViewItem);
         }
     }

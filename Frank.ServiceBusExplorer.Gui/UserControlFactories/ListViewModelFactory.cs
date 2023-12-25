@@ -1,4 +1,6 @@
-﻿using Frank.ServiceBusExplorer.Gui.DialogFactories;
+﻿using Azure.Messaging.ServiceBus;
+
+using Frank.ServiceBusExplorer.Gui.DialogFactories;
 using Frank.ServiceBusExplorer.Gui.UserControls;
 using Frank.ServiceBusExplorer.Models;
 
@@ -13,6 +15,6 @@ public class ListViewModelFactory : IListViewModelFactory
         _messageDetailsWindowFactory = messageDetailsWindowFactory;
     }
 
-    public ListViewModel<T> Create<T>(IEnumerable<T> items, ServiceBusEntity serviceBusEntity, TopicEntity topicEntity, SubscriptionEntity subscriptionEntity) 
+    public ListViewModel Create(IEnumerable<ServiceBusReceivedMessage> items, ServiceBusEntity serviceBusEntity, TopicEntity topicEntity, SubscriptionEntity subscriptionEntity) 
         => new(items, _messageDetailsWindowFactory, serviceBusEntity, topicEntity, subscriptionEntity);
 }

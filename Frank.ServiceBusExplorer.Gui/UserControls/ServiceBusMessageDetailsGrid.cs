@@ -37,7 +37,6 @@ public class ServiceBusMessageDetailsGrid : Grid
                 if (row == 1 && col == 0)
                 {
                     SetColumnSpan(groupBox,3);
-                    
                 }
                 
                 var scrollViewer = new ScrollViewer

@@ -89,7 +89,7 @@ public class MessageDetailsWindow : Window
     
     private void BuildBody()
     {
-        var codeEditor = new CodeArea(IdentifyHighlightStyle(_message.ContentType)) { Text = _message.Body.ToString(), IsReadOnly = true };
+        var codeEditor = new CodeEditor(IdentifyHighlightStyle(_message.ContentType)) { Text = _message.Body.ToString(), IsReadOnly = true };
         
         _serviceBusMessageDetailsGrid.SetCellContent(1, 0, codeEditor, "Body");
     }

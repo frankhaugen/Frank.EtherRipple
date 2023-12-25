@@ -7,12 +7,12 @@ using Frank.ServiceBusExplorer.Models;
 
 namespace Frank.ServiceBusExplorer.Gui.UserControls;
 
-public class ListViewModel<T> : ListView
+public class ListViewModel : ListView
 {
-    public ListViewModel(IEnumerable<T> items, IMessageDetailsWindowFactory messageDetailsWindowFactory, ServiceBusEntity serviceBusEntity, TopicEntity topicEntity, SubscriptionEntity subscriptionEntity)
+    public ListViewModel(IEnumerable<ServiceBusReceivedMessage> messages, IMessageDetailsWindowFactory messageDetailsWindowFactory, ServiceBusEntity serviceBusEntity, TopicEntity topicEntity, SubscriptionEntity subscriptionEntity)
     {
         DataContext = this;
-        ItemsSource = items;
+        ItemsSource = messages;
         
         this.MouseDoubleClick += (sender, args) =>
         {

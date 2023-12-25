@@ -4,9 +4,9 @@ using ICSharpCode.AvalonEdit.Highlighting;
 
 namespace Frank.ServiceBusExplorer.Gui.UserControls;
 
-public class CodeArea : ICSharpCode.AvalonEdit.TextEditor
+public class CodeEditor : ICSharpCode.AvalonEdit.TextEditor
 {
-    public CodeArea(IHighlightingDefinition highlightingDefinition)
+    public CodeEditor(IHighlightingDefinition highlightingDefinition)
     {
         SyntaxHighlighting = highlightingDefinition;
         FontFamily = new("Consolas");
